@@ -51,12 +51,16 @@ function handlerFunction(event) {
             loadMoreButton.removeAttribute("hidden")
             finalMessage.setAttribute("hidden", "true")
             Notify.success(`Hooray! We found ${imgs.totalHits} images.`)
+            if (40 > imgs.totalHits) {
+                loadMoreButton.setAttribute("hidden", "true")
+                return finalMessage.removeAttribute("hidden")
+            }
         })
         .catch(error => console.log(error));
     
         setTimeout(() => {
              simpleGallery = new SimpleLightbox('.gallery a', { /* options */ });               
-        }, 200)
+        }, 50)
             
     }
 
