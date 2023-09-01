@@ -1,6 +1,8 @@
 @import './common';
 
 header {
+    width: 100%;
+    position: fixed;
     height: 72px;
     background-color:#5e37a7;
     display: flex;
@@ -72,7 +74,7 @@ body {
 }
 
 .gallery {
-    padding-top: 30px;
+    padding-top: 100px;
     align-items: center;
     justify-content: center;
     gap: 40px;
@@ -100,4 +102,8 @@ body {
     position: absolute;
     font-size: 28px;
 
+}
+
+.photo {
+    object-fit: cover;
 }

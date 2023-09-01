@@ -1,15 +1,17 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SimpleLightbox from "simplelightbox";
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import {createMarkUp} from "./js/createMarkup.js"
+
 const BASIC_URL = "https://pixabay.com/api/"
 const URL_KEY = "39188541-a1bd6d68f6e7210f6abdbcfe1"
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
 const form = document.querySelector("form")
 const { searchInput } = form.elements
 const gallery = document.querySelector(".gallery")
 const loadMoreButton = document.querySelector(".load-more")
 const finalMessage = document.querySelector(".final-message")
-
+let simpleGallery 
 let pageNumber 
-
 
 const fetchImgs = async (params) => {
   const response = await fetch(`${BASIC_URL}?${params}`);
@@ -17,9 +19,9 @@ const fetchImgs = async (params) => {
   return imgs;
 };  
 
-
-
 form.addEventListener("submit", handlerFunction)
+loadMoreButton.addEventListener("click", loadMoreFunction)
+
 
 function handlerFunction(event) {
 
@@ -39,50 +41,24 @@ function handlerFunction(event) {
         .then(imgs => {
 
             if (imgs.hits.length === 0) {
+                simpleGallery.refresh()
                 Notify.failure('Sorry, there are no images matching your search query. Please try again.')
                 return
             }
 
             gallery.innerHTML = createMarkUp(imgs.hits)
+            pageNumber += 1
             loadMoreButton.removeAttribute("hidden")
             finalMessage.setAttribute("hidden", "true")
             Notify.success(`Hooray! We found ${imgs.totalHits} images.`)
         })
         .catch(error => console.log(error));
     
+        setTimeout(() => {
+             simpleGallery = new SimpleLightbox('.gallery a', { /* options */ });               
+        }, 200)
             
     }
-
-    function createMarkUp(imgs) {
-        pageNumber += 1
-        const markUp = imgs.map(({downloads, comments, views, tags, webformatURL, largeImageURL, likes }) => {
-    return `<div class="photo-card">
-        <img src="${webformatURL}" width="600px" height="400px" alt="${tags}" loading="lazy" />
-            <div class="info">
-            <p class="info-item">
-                <b>Likes</b>
-                ${likes}
-                </p>
-            <p class="info-item">
-                <b>Views</b>
-                ${views}
-                </p>
-            <p class="info-item">
-                <b>Comments</b>
-                ${comments}
-                </p>
-            <p class="info-item">
-                <b>Downloads</b>
-                ${downloads}
-                </p>
-            </div>
-    </div>`
-    }).join("")
-    return markUp
-}
-
-loadMoreButton.addEventListener("click", loadMoreFunction)
-
 
 function loadMoreFunction() {
     const params = new URLSearchParams({
@@ -95,13 +71,16 @@ function loadMoreFunction() {
         per_page: 39,
     })
 
-
     fetchImgs(params).then(imgs => {
         if (pageNumber > imgs.totalHits / 39) {
             loadMoreButton.setAttribute("hidden", "true")
             return finalMessage.removeAttribute("hidden")
         }
-        gallery.insertAdjacentHTML("beforeend",  createMarkUp(imgs.hits))
+        gallery.insertAdjacentHTML("beforeend", createMarkUp(imgs.hits))
+        pageNumber += 1
+        simpleGallery.refresh()
+
     })  
 }
+
 
