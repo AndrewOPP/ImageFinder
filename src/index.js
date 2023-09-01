@@ -39,7 +39,7 @@ function handlerFunction(event) {
         
     fetchImgs(params)
         .then(imgs => {
-
+            console.log(imgs);
             if (imgs.hits.length === 0) {
                 simpleGallery.refresh()
                 Notify.failure('Sorry, there are no images matching your search query. Please try again.')
@@ -47,7 +47,6 @@ function handlerFunction(event) {
             }
 
             gallery.innerHTML = createMarkUp(imgs.hits)
-            pageNumber += 1
             loadMoreButton.removeAttribute("hidden")
             finalMessage.setAttribute("hidden", "true")
             Notify.success(`Hooray! We found ${imgs.totalHits} images.`)
@@ -65,6 +64,7 @@ function handlerFunction(event) {
     }
 
 function loadMoreFunction() {
+    pageNumber += 1
     const params = new URLSearchParams({
         key: URL_KEY,
         q: searchInput.value,
@@ -76,12 +76,13 @@ function loadMoreFunction() {
     })
 
     fetchImgs(params).then(imgs => {
-        if (pageNumber > imgs.totalHits / 39) {
+        if (pageNumber-1 > imgs.totalHits / 39) { 
             loadMoreButton.setAttribute("hidden", "true")
             return finalMessage.removeAttribute("hidden")
         }
+
         gallery.insertAdjacentHTML("beforeend", createMarkUp(imgs.hits))
-        pageNumber += 1
+
         simpleGallery.refresh()
 
     })  
