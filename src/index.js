@@ -82,7 +82,10 @@ function loadMoreFunction() {
         }
 
         gallery.insertAdjacentHTML("beforeend", createMarkUp(imgs.hits))
-        simpleGallery.refresh()
+        setTimeout(() => {
+            simpleGallery.refresh()
+        }, 50)
+
 
     })  
 }
