@@ -13,7 +13,7 @@ const gallery = document.querySelector(".gallery")
 const loadMoreButton = document.querySelector(".load-more")
 const finalMessage = document.querySelector(".final-message")
 let pageNumber 
-
+let simpleGallery = null
 const fetchImgs = async (params) => {
     const response = await axios.get(`${BASIC_URL}?${params}`);
     return response.data;
