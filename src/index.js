@@ -39,7 +39,6 @@ function handlerFunction(event) {
         
     fetchImgs(params)
         .then(imgs => {
-            console.log(imgs);
             if (imgs.hits.length === 0) {
                 simpleGallery.refresh()
                 Notify.failure('Sorry, there are no images matching your search query. Please try again.')
@@ -57,8 +56,6 @@ function handlerFunction(event) {
             }
         })
         .catch(error => console.log(error));
-    
-x
             
     }
 
