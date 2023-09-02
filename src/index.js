@@ -2,6 +2,8 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from "simplelightbox";
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import {createMarkUp} from "./js/createMarkup.js"
+import axios, {isCancel, AxiosError} from 'axios';
+
 
 const BASIC_URL = "https://pixabay.com/api/"
 const URL_KEY = "39188541-a1bd6d68f6e7210f6abdbcfe1"
@@ -10,11 +12,10 @@ const { searchInput } = form.elements
 const gallery = document.querySelector(".gallery")
 const loadMoreButton = document.querySelector(".load-more")
 const finalMessage = document.querySelector(".final-message")
-let simpleGallery 
 let pageNumber 
 
 const fetchImgs = async (params) => {
-  const response = await fetch(`${BASIC_URL}?${params}`);
+  const response = await axios.get(`${BASIC_URL}?${params}`);
   const imgs = await response.json();
   return imgs;
 };  
@@ -59,7 +60,7 @@ function handlerFunction(event) {
     
         setTimeout(() => {
              simpleGallery = new SimpleLightbox('.gallery a', { /* options */ });               
-        }, 50)
+        }, 10)
             
     }
 
@@ -76,13 +77,13 @@ function loadMoreFunction() {
     })
 
     fetchImgs(params).then(imgs => {
+
         if (pageNumber-1 > imgs.totalHits / 39) { 
             loadMoreButton.setAttribute("hidden", "true")
             return finalMessage.removeAttribute("hidden")
         }
 
         gallery.insertAdjacentHTML("beforeend", createMarkUp(imgs.hits))
-
         simpleGallery.refresh()
 
     })  
