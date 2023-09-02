@@ -15,9 +15,8 @@ const finalMessage = document.querySelector(".final-message")
 let pageNumber 
 
 const fetchImgs = async (params) => {
-  const response = await axios.get(`${BASIC_URL}?${params}`);
-  const imgs = await response.json();
-  return imgs;
+    const response = await axios.get(`${BASIC_URL}?${params}`);
+    return response.data;
 };  
 
 form.addEventListener("submit", handlerFunction)
@@ -50,6 +49,7 @@ function handlerFunction(event) {
             gallery.innerHTML = createMarkUp(imgs.hits)
             loadMoreButton.removeAttribute("hidden")
             finalMessage.setAttribute("hidden", "true")
+            simpleGallery = new SimpleLightbox('.gallery a', { /* options */ });      
             Notify.success(`Hooray! We found ${imgs.totalHits} images.`)
             if (40 > imgs.totalHits) {
                 loadMoreButton.setAttribute("hidden", "true")
@@ -58,9 +58,7 @@ function handlerFunction(event) {
         })
         .catch(error => console.log(error));
     
-        setTimeout(() => {
-             simpleGallery = new SimpleLightbox('.gallery a', { /* options */ });               
-        }, 10)
+x
             
     }
 
