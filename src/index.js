@@ -40,7 +40,7 @@ function handlerFunction(event) {
     fetchImgs(params)
         .then(imgs => {
             if (imgs.hits.length === 0) {
-                simpleGallery.refresh()
+                if(simpleGallery !== null) simpleGallery.refresh()
                 Notify.failure('Sorry, there are no images matching your search query. Please try again.')
                 return
             }
